@@ -5,10 +5,9 @@ EUR = 73
 CHAT_ID = 'TELEGRAM_CHAT_ID'
 TOKEN = 'TELEGRAM_TOKEN'
 
+min_rating = 3
 
 try:
-    from local_settings import *
+    from settings.local_settings import *
 except ImportError:
-    pass
-
     print(' - - - - - - - START WITH MAIN SETTINGS - - - - - - - ')

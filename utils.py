@@ -11,4 +11,4 @@ def get_digits(text):
         return int(digit)
     return 0
 
-print(get_digits('Найдено 3 048 резюме'))
+# print(get_digits('Найдено 3 048 резюме'))
