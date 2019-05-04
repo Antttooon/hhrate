@@ -5,7 +5,7 @@ EUR = 73
 CHAT_ID = 'TELEGRAM_CHAT_ID'
 TOKEN = 'TELEGRAM_TOKEN'
 
-min_rating = 3
+MIN_RATING = 10
 
 try:
     from settings.local_settings import *

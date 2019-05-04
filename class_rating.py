@@ -19,7 +19,8 @@ class ParseRating:
 
         self.session = requests.session()
         self.session.headers.update({
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36 OPR/58.0.3135.79'
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) \
+            Chrome/71.0.3578.98 Safari/537.36 OPR/58.0.3135.79'
         })
 
 
@@ -57,7 +58,7 @@ class ParseRating:
     def run(self):
         all_zp_list = []
         pages = self.get_all_pages()
-        for url in pages[:]:
+        for url in pages[:10]:
             page = self.session.get(url).text
             zp_list = self.get_zp(page)
             all_zp_list += zp_list
@@ -71,7 +72,7 @@ class ParseRating:
         self.t_message += '\nMax ZP:' + str(max(all_zp_list))
         self.t_message += '\nMin ZP:' + str(min([i for i in all_zp_list if i != 0]))
 
-        if my_rating.isalnum() and int(my_rating) > settings.min_rating:
+        if my_rating.isalnum() and int(my_rating) > settings.MIN_RATING:
             self.t_message += '\n !!! Warning, rating is very low !!! {}\n'.format(my_rating)
             self.t_message += urllib.parse.quote_plus(self.url)
 
