@@ -1,4 +1,5 @@
 import re
+import urllib.parse
 
 import requests
 from bs4 import BeautifulSoup as bs
@@ -10,8 +11,8 @@ from utils import get_digits
 class ParseRating:
     def __init__(self, search_text=None):
 
-        self.search_text = search_text.replace(' ', '+') or 'Python'
-        self.url = 'https://spb.hh.ru/search/resume?area=2&clusters=true&exp_period=all_time&logic=normal&no_magic=false&order_by=relevance&pos=full_text&text={search}'.format(
+        self.search_text =  urllib.parse.quote_plus(search_text) or 'Python'
+        self.url = 'https://spb.hh.ru/search/resume?text={search}&area=2&clusters=true&exp_period=all_time&logic=normal&no_magic=false&order_by=relevance&pos=full_text'.format(
             search=self.search_text)
         self.t_url = 'https://api.telegram.org/bot{token}/sendMessage?chat_id={chat_id}&text={text}'
         self.t_message = ''
@@ -20,6 +21,7 @@ class ParseRating:
         self.session.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36 OPR/58.0.3135.79'
         })
+
 
     def get_all_pages(self):
         all_pages_list = []
@@ -71,7 +73,7 @@ class ParseRating:
 
         if my_rating.isalnum() and int(my_rating) > settings.min_rating:
             self.t_message += '\n !!! Warning, rating is very low !!! {}\n'.format(my_rating)
-            self.t_message += str(self.url.encode('utf-8'))
+            self.t_message += str(self.url)
 
         print(self.t_message)
 
