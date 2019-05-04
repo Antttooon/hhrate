@@ -73,7 +73,7 @@ class ParseRating:
 
         if my_rating.isalnum() and int(my_rating) > settings.min_rating:
             self.t_message += '\n !!! Warning, rating is very low !!! {}\n'.format(my_rating)
-            self.t_message += str(self.url)
+            self.t_message += urllib.parse.quote_plus(self.url)
 
         print(self.t_message)
 
