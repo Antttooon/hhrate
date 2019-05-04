@@ -9,15 +9,17 @@ from utils import get_digits
 
 class ParseRating:
     def __init__(self, search_text=None):
+
         self.search_text = search_text.replace(' ', '+') or 'Python'
+        self.url = 'https://spb.hh.ru/search/resume?area=2&clusters=true&exp_period=all_time&logic=normal&no_magic=false&order_by=relevance&pos=full_text&text={search}'.format(
+            search=self.search_text)
         self.t_url = 'https://api.telegram.org/bot{token}/sendMessage?chat_id={chat_id}&text={text}'
         self.t_message = ''
+
         self.session = requests.session()
         self.session.headers.update({
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36 OPR/58.0.3135.79'
         })
-
-        self.url = 'https://spb.hh.ru/search/resume?area=2&clusters=true&exp_period=all_time&logic=normal&no_magic=false&order_by=relevance&pos=full_text&text={search}'.format(search=self.search_text)
 
     def get_all_pages(self):
         all_pages_list = []
@@ -57,7 +59,7 @@ class ParseRating:
             page = self.session.get(url).text
             zp_list = self.get_zp(page)
             all_zp_list += zp_list
-        self.t_message += '\nPages count: ' + str(len(pages))+'\n'
+        self.t_message += '\nPages count: ' + str(len(pages)) + '\n'
         try:
             my_rating = str(all_zp_list.index(64500) + 1)
         except:
@@ -68,18 +70,14 @@ class ParseRating:
         self.t_message += '\nMin ZP:' + str(min([i for i in all_zp_list if i != 0]))
 
         if my_rating.isalnum() and int(my_rating) > settings.min_rating:
-            self.t_message += '\n !!! Warning, rating is very low !!! {}'.format(my_rating)
-            self.t_message += '\n'+ self.url
+            self.t_message += '\n !!! Warning, rating is very low !!! {}\n'.format(my_rating)
+            self.t_message += str(self.url.encode('utf-8'))
+
         print(self.t_message)
 
         try:
             send_message = requests.get(
                 self.t_url.format(token=settings.TOKEN, chat_id=settings.CHAT_ID, text=self.t_message))
-            print('Message send status: ',send_message.status_code)
+            print('Message send status: ', send_message.status_code)
         except Exception as e:
-            print("Message not send: ", e)
-
-
-
-# get_rating = ParseRating('Программист Python')
-# get_rating.run()
+            print("ERROR : Message not send: ", e)
