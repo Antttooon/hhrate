@@ -58,7 +58,7 @@ class ParseRating:
     def run(self):
         all_zp_list = []
         pages = self.get_all_pages()
-        for url in pages[:10]:
+        for url in pages[:]:
             page = self.session.get(url).text
             zp_list = self.get_zp(page)
             all_zp_list += zp_list
